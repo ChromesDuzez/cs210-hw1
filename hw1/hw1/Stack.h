@@ -17,8 +17,10 @@ public:
     }
     Object& pop()
     {
+        const Object& back = theList.back();
+        Object popped = back;
         theList.pop_back();
-        return *theList.end();
+        return popped;
     }
 private:
     List<Object> theList;

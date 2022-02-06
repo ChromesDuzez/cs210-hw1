@@ -17,8 +17,10 @@ public:
     }
     Object& dequeue()
     {
+        const Object& front = theList.front();
+        Object popped = front;
         theList.pop_front();
-        return *theList.begin();
+        return popped;
     }
 private:
     List<Object> theList;

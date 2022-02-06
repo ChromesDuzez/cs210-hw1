@@ -306,7 +306,7 @@ public:
         itr->prev->next = nodePtr;
         delete itr;
         listSize--;
-        return nodePtr;
+        return itr;
     }
 
     // Return the index of the node containing the matching value

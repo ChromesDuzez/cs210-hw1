@@ -5,17 +5,19 @@ class Queue
 public:
     bool isEmpty() const
     {
-        return true;
+        return theList.empty();
     }
     const Object& getFront() const
     {
-        return 0;
+        return *theList.begin();
     }
     void enqueue(const Object& x)
     {
+        theList.push_back(x);
     }
     Object& dequeue()
     {
+        theList.pop_front();
         return *theList.begin();
     }
 private:

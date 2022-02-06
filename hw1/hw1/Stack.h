@@ -5,18 +5,20 @@ class Stack
 public:
     bool isEmpty() const
     {
-        return true;
+        return theList.empty();
     }
     const Object& top() const
     {
-        return 0;
+        return *theList.end();
     }
     void push(const Object& x)
     {
+        theList.push_back(x);
     }
     Object& pop()
     {
-        return *theList.begin();
+        theList.pop_back();
+        return *theList.end();
     }
 private:
     List<Object> theList;

@@ -1,5 +1,6 @@
-#ifndef LIST_H
-#define LIST_H
+#pragma once
+//#ifndef LIST_H
+//#define LIST_H
 
 #include <algorithm>
 using namespace std;
@@ -160,6 +161,7 @@ public:
 public:
     List()
     {
+        listSize = 0;
         init();
     }
 
@@ -176,42 +178,58 @@ public:
     // Return mutable iterator representing beginning of list.
     iterator begin()
     {
-        return iterator(nullptr);
+        return iterator(head->next);
     }
 
     // Return constant iterator representing beginning of list.
     const_iterator begin() const
     {
-        return const_iterator(nullptr);
+        return const_iterator(head->next);
     }
 
     // Return iterator representing endmarker of list.
     // Mutator version is first, then accessor version.
     iterator end()
     {
-        return iterator(nullptr);
+        return iterator(tail->prev); //*List.back()
     }
 
     const_iterator end() const
     {
-        return const_iterator(nullptr);
+        return const_iterator(tail->prev);
     }
 
     // Return number of elements currently in the list.
     int size() const
     {
-        return -1;
+        /*int count = 0;
+        Node* currentNodePtr = head->next;
+        while (currentNodePtr->next != nullptr)
+        {
+            currentNodePtr = currentNodePtr->next;
+            count++;
+        }
+        return count;*/
+        return listSize;
     }
 
     // Return true if the list is empty, false otherwise.
     bool empty() const
     {
+        if (head->next->next == nullptr)
+        {
+            return true;
+        }
         return false;
     }
 
     // Removes all elements from the list
     void clear()
     {
+        while (head->next->next != nullptr)
+        {
+            this->pop_front();
+        }
     }
 
     /* front, back, push_front, push_back, pop_front, and pop_back
@@ -221,65 +239,104 @@ public:
     //Returns the value stored in the first element of the list
     const Object& front() const
     {
-        //note: these values need to be replaced, just here for compilation purposes
-        return 0;
+        return head->next->data;
     }
 
     //Returns the value stored in the last element of the list
     const Object& back() const
     {
-        //note: these values need to be replaced, just here for compilation purposes
-        return 0;
+        return tail->prev->data;
     }
 
     //Inserts an object at the front of the list
     void push_front(const Object& x)
     {
+        struct Node* newNode = new Node(x, head, head->next);
+        head->next->prev = newNode;
+        head->next = newNode;
+        listSize++;
     }
 
     //Inserts an object at the back of the list
     void push_back(const Object& x)
     {
+        struct Node* newNode = new Node(x, tail->prev, tail);
+        tail->prev->next = newNode;
+        tail->prev = newNode;
+        listSize++;
     }
 
     //Removes the first element in the list
     void pop_front()
     {
+        Node* nodePtr = head->next->next;
+        head->next->next->prev = head;
+        delete head->next;
+        head->next = nodePtr;
+        listSize--;
     }
 
     //Removes the last element in the list
     void pop_back()
     {
+        Node* nodePtr = tail->prev->prev;
+        tail->prev->prev->next = tail;
+        delete tail->prev;
+        tail->prev = nodePtr;
+        listSize--;
     }
 
     // Insert x before itr.
     iterator insert(iterator itr, const Object& x)
     {
-        //need to update the return value, just itr so it will compile
-        return itr;
+        //need to update the return value, it's just itr so it will compile
+        struct Node* newNode = new Node(x, itr->prev, itr);
+        itr->prev->next = newNode;
+        itr->prev = newNode;
+        listSize++;
+        return newNode;
     }
 
     // Erase item at itr.
     iterator remove(iterator itr)
     {
-        //need to update the return value, just itr so it will compile
-        return itr;
+        //need to update the return value, it's just itr so it will compile
+        Node* nodePtr = itr->next;
+        itr->next->prev = itr->prev;
+        itr->prev->next = nodePtr;
+        delete itr;
+        listSize--;
+        return nodePtr;
     }
 
     // Return the index of the node containing the matching value
     // Return -1 if no matching value
     int find(const Object& x)
     {
+        int count = 0;
+        Node* currentNodePtr = head->next;
+        while (currentNodePtr->next != nullptr)
+        {
+            if (currentNodePtr->data == x)
+            {
+                return count;
+            }
+            currentNodePtr = currentNodePtr->next;
+            count++;
+        }
         return -1;
     }
 
 private:
-    Node* head;
-    Node* tail;
+    Node* head = new Node();
+    Node* tail = new Node();
+    int listSize = 0;
 
     void init()
     {
+        head->next = tail;
+        tail->prev = head;
     }
 };
 
-#endif
+//#endif
